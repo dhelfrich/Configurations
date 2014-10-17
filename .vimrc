@@ -53,7 +53,7 @@ NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'SirVer/ultisnips'
 NeoBundleLazy 'Valloric/YouCompleteMe'
 "YouCompleteMe just for c,cpp
-"autocmd FileType c,cpp NeoBundleSource YouCompleteMe
+autocmd FileType c,cpp NeoBundleSource YouCompleteMe
 NeoBundle 'Shougo/neocomplete.vim'
 
 "SingleCompile
@@ -139,6 +139,7 @@ nmap <F10> :SCCompileRun<cr>
 "specify compiler
 "call SingleCompile#ChooseCompiler('filetype', 'compiler')
 call SingleCompile#ChooseCompiler('python', 'python3')
+call SingleCompile#SetCompilerTemplate('cpp','g++','GNU C++ Compiler','g++', '-std=c++0x -Wall -g -o $(FILE_TITLE)$' , './$(FILE_TITLE)$')
 
 "flags for c++ to match ones from CSCI2270
 "didn't work
@@ -150,6 +151,7 @@ call SingleCompile#ChooseCompiler('python', 'python3')
 let g:UltiSnipsExpandTrigger="<leader>a"
 let g:UltiSnipsJumpForwardTrigger="<leader>a"
 let g:UltiSnipsJumpBackwardTrigger="<leader>s"
+
 
 
 "neocomplete
@@ -182,13 +184,13 @@ let g:UltiSnipsJumpBackwardTrigger="<leader>s"
     inoremap <expr><C-l>     neocomplete#complete_common_string()
 
     " Recommended key-mappings.
-    " <CR>: close popup and save indent.
-    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-    function! s:my_cr_function()
-      return neocomplete#close_popup() . "\<CR>"
-      " For no inserting <CR> key.
-      "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-    endfunction
+    " <CR>: close popup and save indent. Had to disable for delimitMate
+    "imap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    "function! s:my_cr_function()
+    "  return neocomplete#close_popup() . "\<CR>"
+    "  " For no inserting <CR> key.
+    "  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+    "endfunction
     " <TAB>: completion.
     inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
     " <C-h>, <BS>: close popup and delete backword char.
@@ -301,11 +303,14 @@ endif
 
 "DelimitMate
 
+
+
 let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 
 autocmd FileType c,cpp let g:ycm_confirm_extra_conf = 0
+autocmd FileType c,cpp NeoCompleteDisable
 
 "colorscheme settings
 set t_Co=256
