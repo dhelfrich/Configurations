@@ -52,8 +52,8 @@ NeoBundle 'tomtom/tlib_vim'
 " NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'SirVer/ultisnips'
 NeoBundleLazy 'Valloric/YouCompleteMe'
-"YouCompleteMe just for c,cpp
-autocmd FileType c,cpp NeoBundleSource YouCompleteMe
+"YouCompleteMe just for c,cpp,h
+autocmd FileType c,cpp,h NeoBundleSource YouCompleteMe
 NeoBundle 'Shougo/neocomplete.vim'
 
 "SingleCompile
@@ -239,6 +239,15 @@ let g:UltiSnipsJumpBackwardTrigger="<leader>s"
     " https://github.com/c9s/perlomni.vim
     let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
+
+" Ctrl-Space for completions. Heck Yeah!
+inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
+        \ "\<lt>C-n>" :
+        \ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
+        \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
+        \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
+imap <C-@> <C-Space>
+
 "FuzzyFinder maps
 
 "nmap <leader>f :FufFile<CR>
@@ -309,8 +318,8 @@ let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 
-autocmd FileType c,cpp let g:ycm_confirm_extra_conf = 0
-autocmd FileType c,cpp NeoCompleteDisable
+autocmd FileType c,cpp,h let g:ycm_confirm_extra_conf = 0
+autocmd FileType c,cpp,h NeoCompleteDisable
 
 "colorscheme settings
 set t_Co=256
