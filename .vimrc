@@ -52,9 +52,7 @@ NeoBundle 'tomtom/tlib_vim'
 " NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'SirVer/ultisnips'
 NeoBundleLazy 'Valloric/YouCompleteMe'
-"YouCompleteMe just for c,cpp,h
-autocmd FileType c,cpp,h NeoBundleSource YouCompleteMe
-NeoBundle 'Shougo/neocomplete.vim'
+NeoBundleLazy 'Shougo/neocomplete.vim'
 
 "SingleCompile
 NeoBundle 'vim-scripts/SingleCompile'
@@ -99,6 +97,7 @@ filetype plugin indent on
 NeoBundleCheck
 "End NeoBundle Scripts-------------------------
 
+"Make c++ header files be recognized as cpp
 
 "indent settings
 set expandtab
@@ -262,7 +261,7 @@ nmap <leader>r :CtrlPBuffer<CR>
 
 "Haskell Specific
 
-autocmd FileType haskell setlocal shiftwidth=4 softtabstop=4  expandtab  omnifunc=necoghc#omnifunc
+autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2  expandtab  omnifunc=necoghc#omnifunc
 let $PATH = $PATH . ':' . expand('~/.cabal/bin')
 "let g:ycm_semantic_triggers = {'haskell' : ['.']}
 
@@ -273,6 +272,8 @@ let $PATH = $PATH . ':' . expand('~/.cabal/bin')
 
 au FileType haskell nnoremap <buffer> <F1> :GhcModType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+au FileType haskell map <LocalLeader>in :GhcModInfo<cr>
+
 "vim-hdevtools
 
 "au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
@@ -318,8 +319,15 @@ let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 
-autocmd FileType c,cpp,h let g:ycm_confirm_extra_conf = 0
-autocmd FileType c,cpp,h NeoCompleteDisable
+"YouCompleteMe just for c,cpp
+
+"let blacklist = ['c', 'cpp']
+"autocmd BufWritePre * if index(blacklist, &ft) < 0 | NeoBundleSource neocomplete 
+autocmd FileType c,cpp NeoBundleSource YouCompleteMe
+autocmd FileType c,cpp let g:ycm_confirm_extra_conf = 0
+
+"more cpp settings
+autocmd FileType c,cpp set foldmethod=syntax
 
 "colorscheme settings
 set t_Co=256
