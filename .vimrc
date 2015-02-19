@@ -1,7 +1,6 @@
 "NeoBundle Scripts-----------------------------
 if has('vim_starting')
-  set nocompatible               " Be iMproved
-
+  set nocompatible               " Be iMproved 
   " Required:
   set runtimepath+=/home/daniel/.vim/bundle/neobundle.vim/
 endif
@@ -88,9 +87,15 @@ NeoBundle 'kien/ctrlp.vim'
 "Auto close brackets
 NeoBundle 'Raimondi/delimitMate'
 
+NeoBundle 'vim-scripts/Vim-R-plugin'
+
+"Latex
+NeoBundle 'LaTeX-Box-Team/LaTeX-Box'
+
 
 call neobundle#end()
 filetype plugin indent on
+
 
 " If there are uninstalled bundles found on startup,
 " this will conveniently prompt you to install them.
@@ -98,6 +103,8 @@ NeoBundleCheck
 "End NeoBundle Scripts-------------------------
 
 "Make c++ header files be recognized as cpp
+
+let $PATH = $PATH . ':' . expand('~/.cabal/bin')
 
 "indent settings
 set expandtab
@@ -108,6 +115,11 @@ set softtabstop=4
 set nu
 "show fold columns
 set foldcolumn=2
+set cursorline
+set cursorcolumn
+
+"virtual editing
+set ve=all
 
 "show commands on the bottom
 set showcmd
@@ -119,6 +131,7 @@ set hlsearch
 if has('mouse')
   set mouse=a
 endif
+
 
 "Macros
 "
@@ -153,7 +166,9 @@ let g:UltiSnipsJumpBackwardTrigger="<leader>s"
 
 
 
+function! Neocompletesettings()
 "neocomplete
+    NeoBundleSource neocomplete.vim
     "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
     " Disable AutoComplPop.
     let g:acp_enableAtStartup = 0
@@ -237,7 +252,12 @@ let g:UltiSnipsJumpBackwardTrigger="<leader>s"
     " For perlomni.vim setting.
     " https://github.com/c9s/perlomni.vim
     let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+    NeoCompleteEnable
+endfunction
 
+"call Neocompletesettings()
+let blacklistNeoComplete = ['c', 'cpp']
+autocmd  BufNewFile,BufRead * if (index(blacklistNeoComplete, &ft) < 0) | call Neocompletesettings() | endif
 
 " Ctrl-Space for completions. Heck Yeah!
 inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
@@ -257,12 +277,52 @@ imap <C-@> <C-Space>
 nmap <leader>f :CtrlP<CR>
 nmap <leader>r :CtrlPBuffer<CR>
 
-
-
 "Haskell Specific
+function! HaskellSettings()
+    map <leader>in :GhcModInfo<cr>
+    map <leader>t :GhcModType<cr>
+    map <leader>T :GhcModTypeInsert<cr>
+    map <leader>ch :GhcModCheck<cr>
+    map <leader>li :GhcModLint<cr>
+    map <leader>ex :GhcModExpand<cr>
 
-autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2  expandtab  omnifunc=necoghc#omnifunc
-let $PATH = $PATH . ':' . expand('~/.cabal/bin')
+    "nnoremap <buffer> <F1> :GhcModType<CR>
+    "nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+
+    nnoremap <esc> :noh<return>:GhcModTypeClear<return><esc>
+
+    hi ghcmodType guibg=Green guifg=White ctermbg=green ctermfg=black cterm=None
+    let g:ghcmod_type_highlight = 'ghcmodType'
+    setlocal ve=all shiftwidth=2 softtabstop=2  expandtab  omnifunc=necoghc#omnifunc
+    
+
+    call WSHighlight()
+endfunction
+
+"Jedi Vim
+
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled=0
+
+
+
+"For R
+function! RSettings()
+    vmap <Space> <Plug>RDSendSelection
+    nmap <Space> <Plug>RDSendLine
+    let vimrplugin_applescript=0
+    let vimrplugin_vsplit=1
+endfunction
+
+
+function! WSHighlight()
+    syn match BadWhiteSpace "^\\s*\\t\\+"
+    syn match BadWhiteSpace "\\s\\+$"
+endfunction
+
+au BufNewFile,BufRead *.hs call HaskellSettings()
+au BufNewFile,BufRead *.r call RSettings()
+
 "let g:ycm_semantic_triggers = {'haskell' : ['.']}
 
 "GHC-Mod
@@ -333,4 +393,5 @@ autocmd FileType c,cpp set foldmethod=syntax
 set t_Co=256
 "colorscheme xoria256
 set background=dark
-colorscheme molokai
+"colorscheme molokai
+colorscheme wombat
