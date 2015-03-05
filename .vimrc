@@ -92,6 +92,8 @@ NeoBundle 'vim-scripts/Vim-R-plugin'
 "Latex
 NeoBundle 'LaTeX-Box-Team/LaTeX-Box'
 
+"Python Colors
+NeoBundle 'hdima/python-syntax'
 
 call neobundle#end()
 filetype plugin indent on
@@ -238,7 +240,12 @@ function! Neocompletesettings()
     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType python setlocal omnifunc=jedi#completions
+    let g:jedi#completions_enabled = 0
+    let g:jedi#auto_vim_configuration = 0
+    let g:neocomplete#force_omni_input_patterns.python =
+    \ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
     " Enable heavy omni completion.
@@ -266,6 +273,10 @@ inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
         \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
         \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
 imap <C-@> <C-Space>
+
+"Python syntax
+let python_highlight_all = 1
+
 
 "FuzzyFinder maps
 
@@ -334,6 +345,9 @@ au FileType haskell nnoremap <buffer> <F1> :GhcModType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 au FileType haskell map <LocalLeader>in :GhcModInfo<cr>
 
+"latex-box
+let g:LatexBox_latexmk_options = "-bibtex"
+
 "vim-hdevtools
 
 "au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
@@ -392,6 +406,6 @@ autocmd FileType c,cpp set foldmethod=syntax
 "colorscheme settings
 set t_Co=256
 "colorscheme xoria256
-set background=dark
 "colorscheme molokai
-colorscheme wombat
+"colorscheme wombat
+colorscheme badwolf
